@@ -101,12 +101,20 @@ def main():
 
             st.dataframe(data)
 
-            st.download_button(
-                label='Stáhnout objednávky jako Excel',
-                data=data.to_excel(index=False, engine='openpyxl'),
-                file_name='objednavky_betonu.xlsx',
-                mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            )
+           import io  # přidej nahoru do souboru, pokud tam ještě není
+
+# Vygenerování Excelu do paměti (buffer)
+excel_buffer = io.BytesIO()
+data.to_excel(excel_buffer, index=False, engine='openpyxl')
+excel_buffer.seek(0)
+
+# Tlačítko pro stažení
+st.download_button(
+    label='Stáhnout objednávky jako Excel',
+    data=excel_buffer,
+    file_name='objednavky_betonu.xlsx',
+    mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+)
 
 if __name__ == '__main__':
     main()
